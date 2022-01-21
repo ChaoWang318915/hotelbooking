@@ -1,0 +1,64 @@
+
+@media (max-width: 991px) {
+body {font-size: 13px;line-height: 1.615; } }
+
+@media (max-width: 767px) {
+body {-webkit-text-size-adjust: none;font-size: 13px;line-height: 1.615; } }
+
+img {border-style: none; }
+
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {display: none;-webkit-appearance: none;cursor: pointer;-webkit-transition: all 0.3s;transition: all 0.3s; }
+
+button::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner {border: none;padding: 0; }
+
+blockquote,
+q {quotes: none; }
+
+q:before,
+q:after {content: ''; }
+
+:-ms-input-placeholder {color: #175890; }
+::-webkit-input-placeholder {color: #175890; }
+
+a:hover {
+text-decoration: none;
+color: inherit; }
+
+a:focus {
+color: inherit; }
+
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {outline: none !important; }
+
+.autocomplete {position: absolute;top: 100%;left: 0;-webkit-transition: all 0.3s ease-out;transition: all 0.3s ease-out;opacity: 0;visibility: hidden;z-index: 150;background: #fff;width: 515px;border: 1px solid #c0d4e0;padding: 14px 6px 6px 15px;margin: 1px 0; }
+
+@media (max-width: 767px) {
+.autocomplete {width: 100%;right: 0; } }
+
+.autocomplete .list-hold {max-height: 246px;overflow-y: auto;overflow-x: hidden; }
+.autocomplete h3 {font-size: 16px;font-weight: normal;line-height: 20px;margin: 0 0 10px; }
+.autocomplete .ui-autocomplete {top: auto !important;left: auto !important;width: auto !important;display: block !important;margin: 0;padding: 0;list-style: none;color: #585858;font-size: 12px; }
+.autocomplete .ui-autocomplete > li {padding: 0 0 10px; }
+.autocomplete .ui-autocomplete > li figure {margin: 0;display: -webkit-box;display: -ms-flexbox;display: flex;cursor: default; }
+.autocomplete .ui-autocomplete > li .img {-webkit-box-flex: 0;-ms-flex: 0 0 83px;flex: 0 0 83px;max-width: 83px;margin: 0 9px 0 0; }
+
+@media (max-width: 374px) {
+.autocomplete .ui-autocomplete > li .img {-webkit-box-flex: 0;-ms-flex: 0 0 60px;flex: 0 0 60px;max-width: 60px; } }
+
+.autocomplete .ui-autocomplete > li .img img {display: block;width: 100%;height: auto;border-radius: 4px; }
+.autocomplete .ui-autocomplete > li h4 {margin: -3px 0 0;font-size: 14px;line-height: 18px;color: #175890;font-weight: normal; }
+
+@media (max-width: 374px) {
+.autocomplete .ui-autocomplete > li h4 {font-size: 13px; } }
+
+.autocomplete .ui-autocomplete > li p {margin: 0; }
+.open-autocomplete .autocomplete {opacity: 1;visibility: visible; }

@@ -1,0 +1,38 @@
+.ui-datepicker {border: 1px solid #b4d0eb;background: #fff;padding: 0;width: 280px;max-width: 280px;z-index: 1000 !important;}
+
+.ui-datepicker .ui-datepicker-header {padding: 12px 50px;position: relative;border-bottom: solid 1px #b4d0eb;}
+.ui-datepicker .ui-datepicker-prev,
+
+.ui-datepicker .ui-datepicker-next {overflow: hidden;font-size: 0;line-height: 0;position: absolute;top: 0;bottom: 0;z-index: 20;cursor: pointer;width: 45px;}
+
+.ui-datepicker .ui-datepicker-prev::before,
+
+.ui-datepicker .ui-datepicker-next::before {content: "";position: absolute;z-index: 20;top: 50%;left: 50%;-webkit-transition: all .3s;transition: all .3s;width: 0;height: 0;border: solid;border-color: transparent;margin-top: -5px;}
+
+.ui-datepicker .ui-datepicker-prev {left: 0;}
+.ui-datepicker .ui-datepicker-prev::before {border-width: 5px 6px 5px 0;border-right-color: #175890;margin-left: -5px;}
+.ui-datepicker .ui-datepicker-prev:hover::before {border-right-color: #ff5d00;}
+
+.ui-datepicker .ui-datepicker-next {right: 0;}
+.ui-datepicker .ui-datepicker-next::before {border-width: 5px 0 5px 6px;border-left-color: #175890;margin-left: -3px;}
+.ui-datepicker .ui-datepicker-next:hover::before {border-left-color: #ff5d00;}
+
+.ui-datepicker .ui-datepicker-title {color: #175890;font-size: 14px;line-height: 1.2;font-family: "Poppins", Verdana, Geneva, sans-serif;font-weight: 700;text-align: center;}
+
+.ui-datepicker .ui-datepicker-calendar {width: 100%;border-collapse: collapse;margin: 0;}
+.ui-datepicker .ui-datepicker-calendar th {color: #175890;text-transform: uppercase;font-size: 12px;line-height: 1.2;font-family: "Poppins", Verdana, Geneva, sans-serif;font-weight: 700;padding: 10px 3px;text-align: center;}
+.ui-datepicker .ui-datepicker-calendar td {padding: 3px;position: relative;width: 14.28%;}
+.ui-datepicker .ui-datepicker-calendar td:last-child {width: auto;}
+.ui-datepicker .ui-datepicker-calendar td a,
+.ui-datepicker .ui-datepicker-calendar td span {color: #666;font-size: 14px;line-height: 1.2;font-family: "Poppins", Verdana, Geneva, sans-serif;display: block;overflow: hidden;text-align: center;position: relative;border: 0;padding: 8px 2px;text-decoration: none;border-radius: 4px;}
+.ui-datepicker .ui-datepicker-calendar td a:hover {text-decoration: none;color: #ff5d00;background: none;}
+.ui-datepicker .ui-datepicker-calendar td .ui-state-highlight {color: #fff;background: #175890;font-weight: 700;}
+.ui-datepicker .ui-datepicker-calendar td .ui-state-highlight:hover {color: #fff;background: #175890;}
+.ui-datepicker .ui-datepicker-calendar td .ui-state-active {color: #fff;background: #ff5d00;font-weight: 700;}
+.ui-datepicker .ui-datepicker-calendar td .ui-state-active:hover {color: #fff;background: #ff5d00;}
+.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-other-month a,
+.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-other-month span {color: #c4c7ca;}
+.ui-datepicker .ui-datepicker-calendar td.ui-state-disabled a,
+.ui-datepicker .ui-datepicker-calendar td.ui-state-disabled span {color: #c4c7ca;pointer-events: none;}
+
+body > #ui-datepicker-div {display: none;}
