@@ -26,8 +26,10 @@ if ($search_data['date1'] && $search_data['date2']) {
 
 	<title>{{$hotels->meta_title}}</title>
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
-		<link rel="stylesheet" href="{{asset('css/slick.css')}}">
+	<link rel="stylesheet" href="{{asset('css/slick.css')}}">
+	<link rel="stylesheet" href="{{asset('css/custom.css')}}">
 	<link rel="stylesheet" href="{{asset('css/datepicker.css')}}">
+
 	<link rel="stylesheet" href="{{asset('css/autocomplete-resorts.css')}}">
 
 	<link rel="stylesheet" href="{{ asset('css/frontstyles.css')}}">
@@ -369,13 +371,11 @@ body .litepicker.is-state3 .container__months .month-item .status-bar .status-st
 		<div class="top-area">
 			<div class="container">
 				<figure class="main-banner description-left">
-					<div class="image">
-
+					<div class="image">						 
 						@if(!empty($Hotel_detail_image))
-	 		 		<img class="lozad" src="#" data-src="{{url('/images/hoteldetail/'.$Hotel_detail_image->h_image)}}" alt="Header Image">
-
+	 		 				<img class="lozad" src="#" data-src="{{url('/images/hotel-galleries/'.$Hotel_detail_image->hotel_id.'/others/hoteldetail/'.$Hotel_detail_image->h_image)}}" alt="Header Image">																	 
 						@endif
-
+ 
 					</div>
 
 		<!--			<figcaption>
@@ -422,7 +422,7 @@ body .litepicker.is-state3 .container__months .month-item .status-bar .status-st
 						                    @endforeach
 										</select>
 										<div style="height: 10px"></div>
-										<select required class="form-control samefld js-example-basic-single3" name="rooms" id="room_id" aria-label="Default select example">
+										<select required class="form-control samefld js-example-basic-single3" name="room_id" id="room_id" aria-label="Default select example">
 										  <option value="0"></option>
 
 										</select>
@@ -603,24 +603,26 @@ body .litepicker.is-state3 .container__months .month-item .status-bar .status-st
 										</ul>
 									</div>
 									<div class="btn-hold">
-										<a href="#" class="btn btn-sm btn-outline-primary">Mehr Infos zur Insel</a>
+										<a href="{{route('islands-view',$hotels->island)}}" class="btn btn-sm btn-outline-primary">Mehr Infos zur Insel</a>
 									</div>
 								</div><!-- block -->
 									@endif
+									 
+									 
 									@if(@$booking_text_regular_prices->free_container != "")
-								<div class="block">
-									<div class="text-hold">
-										<h3>Child Policy</h3>
-										<ul>
-											<p>
-												{!!@$booking_text_regular_prices->free_container!!}
-											</p>
+										<div class="block">
+											<div class="text-hold">
+												<h3>Child Policy</h3>
+												<ul>
+													<p>
+														{!!@$booking_text_regular_prices->free_container!!}
+													</p>
 
-										</ul>
-									</div>
-								</div><!-- block -->
-
-								@endif
+												</ul>
+											</div>
+										</div><!-- block -->
+									@endif
+									 
 								@php
 
 									$transferData = App\Transfer::where('hotel_id',$HotelID)->get();
@@ -628,17 +630,50 @@ body .litepicker.is-state3 .container__months .month-item .status-bar .status-st
 								@endphp
 								@if(count($transferData))
 
+								@if($transferData[0]->description)
+									<div class="block">
+										<div class="text-hold">
+											<h3>Transfer</h3>
+											<ul>
+												{!! $transferData[0]->description !!}
 
-								<div class="block">
-									<div class="text-hold">
-										<h3>Transfer</h3>
-										<ul>
-											{!! $transferData[0]->description !!}
-
-										</ul>
-									</div>
-								</div><!-- block -->
-
+											</ul>
+										</div>
+									</div><!-- block -->
+								@endif
+								@if($hotels->child_policy_for_rates)
+									<!-- Child Policy -->
+									<div class="block">
+										<div class="text-hold">
+											<h3>Kinder Regelung</h3>
+											<ul>
+												<p>{!! $hotels->child_policy_for_rates !!}</p>
+											</ul>
+											<ul>
+												@if($hotels->cpfr_baby_min || $hotels->cpfr_baby_max)
+													<li>													
+														Baby = {{$hotels->cpfr_baby_min}} bis {{$hotels->cpfr_baby_max}} Jahre													
+													</li>
+												@endif
+												@if($hotels->cpfr_child_min || $hotels->cpfr_child_max)
+													<li>														
+														Kind  = {{$hotels->cpfr_child_min}} bis {{$hotels->cpfr_child_max}} Jahre													
+													</li>
+												@endif
+												@if($hotels->cpfr_teen_min || $hotels->cpfr_teen_max)
+													<li>													
+														Teen  = {{$hotels->cpfr_teen_min}} bis {{$hotels->cpfr_teen_max}} Jahre													
+													</li>
+												@endif
+												@if($hotels->cpfr_adult_min || $hotels->cpfr_adult_max)
+													<li>													
+														Erwachsene  = {{$hotels->cpfr_adult_min}} ab {{$hotels->cpfr_adult_max}} Jahre													
+													</li>
+												@endif
+											</ul>
+										</div>
+									</div><!-- block -->
+								@endif
 								@endif
 								<div class="block">
 									<div class="text-hold">
@@ -820,15 +855,24 @@ body .litepicker.is-state3 .container__months .month-item .status-bar .status-st
 								@endphp
 								<p>{!!$hotels->hotel_detail_page!!}</p>
 							</div><!-- end intro-block -->
-							<ul class="search-results-titles " style="z-index: 12;">
-								<li>Ihre Auswahl</li>
-
-								<li>{{$search_data['date1']}} -   {{$search_data['date2']}}</li>
-								<li> {{$search_data['days']}} Nächte</li>
-								<li>
-								{{ $search_data['erwachsene']}} Erwachsene, {{ $search_data['kinder']}} Kinder, {{ $search_data['zimmer']}} Zimmer </li>
-							</ul><!-- end search-results-titles -->
+							 
+							@if($hotels->hotel_name && $search_data['date1'] && $search_data['date2'])
+								<ul class="search-results-titles " style="z-index: 12;">								
+									<li>Ihre Auswahl</li>
+									<li>{{$search_data['date1']}} -   {{$search_data['date2']}}</li>
+									<li> {{$search_data['days']}} Nächte</li>
+									<li>
+									{{ $search_data['erwachsene']}} Erwachsene, {{ $search_data['kinder']}} Kinder, {{ $search_data['zimmer']}} Zimmer 
+									</li>
+									<li>
+									 {{ $hotels->hotel_name }}
+									</li>
+								</ul>
+								<!-- end search-results-titles -->
+							@endif
+							@if($rooms)
 							<ul class="rooms-list">
+								
 								@foreach($rooms as $room)
 								<li>
 									<div class="room-item">
@@ -852,15 +896,48 @@ body .litepicker.is-state3 .container__months .month-item .status-bar .status-st
 													<div class="description-top">
 														<h2>{{$room->room_name}} <small>({{$room->room_size}} m²)</small></h2>
 														<p>
-															Max. {{$room->occupancy_adults1}} Erwachsene
-															@if($room->occupancy_childs1)
-															+ {{$room->occupancy_childs1}} Kinder oder {{$room->occupancy_adults2}} Erwachsene,
+															Max. 
+															@if($room->occupancy_adults1 || $room->occupancy_childs1 || $room->occupancy_adults2 || $room->occupancy_childs2)
+																{{$room->occupancy_adults1}}
+																@if($room->occupancy_adults1 == 1 )
+																Erwachsener
+																@else 
+																Erwachsene 
+																@endif
+																  
+																@if($room->occupancy_childs1)
+																 + {{$room->occupancy_childs1}} 
+																	@if($room->occupancy_childs1 == 1)
+																		Kind 
+																	@else 
+																		Kinder 
+																	@endif
+																@endif
+																oder 
+																@if($room->occupancy_adults2) {{$room->occupancy_adults2}}
+																	@if($room->occupancy_adults2 == 1 )
+																		Erwachsener
+																	@else 
+																		Erwachsene 
+																	@endif
+																@endif
+																
+																@if($room->occupancy_childs2)
+																+ {{$room->occupancy_childs2}} 
+																	@if($room->occupancy_childs2 == 1)
+																		Kind 
+																	@else 
+																		Kinder 
+																	@endif
+																@endif 
+															@else 
+																Zimmerbelegung = {{$room->max_room_occupancy}} 
+																@if($room->max_room_occupancy == 1) 
+																Person 
+																@else Personen 
+																@endif
 															@endif
-
-															@if($room->occupancy_childs2 > 0)
-															{{$room->occupancy_childs2}} Kinder
-
-															@endif  </p>
+														</p>
 													</div>
 												</div>
 
@@ -1040,7 +1117,7 @@ body .litepicker.is-state3 .container__months .month-item .status-bar .status-st
 
 										</div><!-- end room-item-footer -->
 									</div><!-- end room-item -->
-
+									
 
 
 										<div class="modal" id="modal-{{$room->id}}">
@@ -1089,20 +1166,8 @@ body .litepicker.is-state3 .container__months .month-item .status-bar .status-st
 												<div class="descr">
 
 													<div class="block">
-														<h3>{{$room->room_name}} <small>({{$room->room_size}} m²)</small></h3>
-														<ul>
-															<li>Max. {{$room->occupancy_adults1}} Erwachsene
-															@if($room->occupancy_childs1)
-															+ {{$room->occupancy_childs1}} Kinder oder {{$room->occupancy_adults2}} Erwachsene,
-															@endif
-
-															@if($room->occupancy_childs2 > 0)
-														  {{$room->occupancy_childs2}} Kinder
-
-															@endif
-															</li>
-
-														</ul>
+														<h3>{{$room->room_name}}</h3>
+														 
 													</div>
 
 
@@ -1129,6 +1194,7 @@ body .litepicker.is-state3 .container__months .month-item .status-bar .status-st
 								@endforeach
 
 							</ul><!-- end rooms-list -->
+							@endif
 							<div> <p><small>Eventuell sind weitere Zimmerkategorien vorhanden. Bitte fragen Sie gesondert an: <b>Tel: 0800 555 62 73</b></small></p></div>
 							@php
 
@@ -1153,24 +1219,39 @@ body .litepicker.is-state3 .container__months .month-item .status-bar .status-st
 							</div><!-- end services-block -->
 							@endif
 
-
+							@if($hotels->inclusive)
+							<div class="services-info">
+								<h2>Im Zimmerpreis enthalten</h2>
+								<div class="row">
+									<div class="col-md-12">
+										<ul class="inclusive-info">
+										{!!$hotels->inclusive!!}
+										</ul>
+									</div>
+								</div>
+							</div>
+							@endif
 
 							<div class="services-info">
 								<h2>Hotelausstattung &amp; Services</h2>
 								<div class="row">
 									<div class="col-md-6">
-										<h3>Hotel</h3>
-										<ul>{!!$hotels->text_hotel!!}</ul>
-
-										<h3>Hotelausstattung</h3>
-										<ul>{!!$hotels->hotel_features!!}</ul>
-
-										<h3>Verpflegung</h3>
-										<ul>{!!$hotels->catering!!}</ul>
-
-										<h3>Gästeservice</h3>
-										<ul>{!!$hotels->guestservice!!}</ul>
-
+										@if($hotels->text_hotel)
+											<h3>Hotel</h3>
+											<ul>{!!$hotels->text_hotel!!}</ul>
+										@endif
+										@if($hotels->hotel_features)
+											<h3>Hotelausstattung</h3>
+											<ul>{!!$hotels->hotel_features!!}</ul>
+										@endif
+										@if($hotels->catering)
+											<h3>Verpflegung</h3>
+											<ul>{!!$hotels->catering!!}</ul>
+										@endif
+										@if($hotels->guestservice)
+											<h3>Gästeservice</h3>
+											<ul>{!!$hotels->guestservice!!}</ul>
+										@endif
 										<h3><i class="ico-wi-fi"><img class="lozad" src="#" data-src="https://www.my-maldives.com/images/template/ico-wi-fi-gray.png" alt="image description"></i>Wi-Fi / Internet</h3>
 										{!!$hotels->wifi!!}
 										<div class="icon-block">
@@ -1195,20 +1276,25 @@ body .litepicker.is-state3 .container__months .month-item .status-bar .status-st
 									</div>
 
 									<div class="col-md-6">
+										@if($hotels->spa_wellnaess)
 										<h3>Spa und Wellness Angebote</h3>
 										<ul>
 											{!!$hotels->spa_wellnaess!!}
 
 										</ul>
+										@endif
+										@if($hotels->sport_recreation)
 										<h3>Sport &amp; Freizeitaktivitäten</h3>
 										<ul>
-											{!!$hotels->	sport_recreation!!}
+											{!!$hotels->sport_recreation!!}
 										</ul>
+										@endif
+										@if($hotels->entertainment)
 										<h3>Unterhaltung</h3>
 										<ul>
 											{!!$hotels->entertainment!!}
 										</ul>
-
+										@endif
 										<!-- Credit Cards -->
 										<h3>Kreditkarten</h3>
 										<p>Das Hotel akzeptiert die folgenden Kreditkarten:</p>

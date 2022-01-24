@@ -45,10 +45,15 @@ class HotelpageController extends Controller
     public function hotelpage(Request $request, $url_key)
     {
         $params = Session::get('search_params');
+         // dd($params);
         Session::forget('search_params');
         // dd($params);
         $room_id = isset($params['room_id']) ? $params['room_id'] : 0;
         // dd($params);
+        // $to = isset($params['end_date']) ? date('Y-m-d', strtotime($params['end_date'])) : null;
+
+        // $from = isset($params['start_date']) ? date('Y-m-d', strtotime($params['start_date'])) : null;
+
         $to = date('Y-m-d', strtotime($params['end_date']));
 
         $from = date('Y-m-d', strtotime($params['start_date']));
@@ -56,8 +61,8 @@ class HotelpageController extends Controller
         $date1 = date_create($to);
         $date2 = date_create($from);
         $diff = date_diff($date1, $date2);
-
-        // dd($diff);
+// echo json_encode($params);
+         
 
         $search_data['date1'] = $params['start_date'];
         $search_data['date2'] = $params['end_date'];
@@ -71,7 +76,8 @@ class HotelpageController extends Controller
         // dd($search_data);
         $search_data['hotel_id'] = $params['hotel_id'];
         $search_data['days'] = $diff->days;
-        // dd($search_data['days']);
+        // echo "<br>";
+        
         $id = Hotel::where('url_key', $url_key)->where('status', 1)->first();
         $hoteldetails = Hotel::findorfail($id);
         // dd($id->id);
@@ -97,13 +103,14 @@ class HotelpageController extends Controller
             ->where('room_status', '=', 1)
             ->get();
         }
-        
+        // echo json_encode($params);
+        // dd($rooms);
         //dd(DB::getQueryLog());
 
         $booking_text_regular_prices = Booking_text_regular_price::where('hotel_id', '=', $id)->get();
         $free_baby = 0;
 
-        if ($rooms) {
+        // if ($rooms) {
            
             if (count($booking_text_regular_prices)) {
                 $booking_text_regular_prices = $booking_text_regular_prices[0];
@@ -164,8 +171,47 @@ class HotelpageController extends Controller
                     ->with('HotelID', $id)
                     ->with('roomId', $room_id)
                     ->with('gallery_images', $gallery_images);
-        }
+        // }
+        // else{
+        //     if (count($booking_text_regular_prices)) {
+        //         $booking_text_regular_prices = $booking_text_regular_prices[0];
+        //         // dd($hotels->atoll);
+
+        //     } else {
+        //         $booking_text_regular_prices = '';
+        //     }
+        //     $total_persons = $search_data['erwachsene'] + $search_data['kinder'];
+        //     $price_type = "none";
+        //     if ($search_data['erwachsene'] == 1) {
+        //         $price_type = "PriceSingle";
+        //     } elseif ($search_data['erwachsene'] == 2) {
+        //         $price_type = "PriceDoppel";
+        //     } elseif ($search_data['erwachsene'] == 3) {
+        //         $price_type = "PriceTripple";
+        //     }
+        //     elseif($search_data['erwachsene'] > 3){
+        //         $price_type = "PriceRoom";
+        //     }
+
+        //     $gallery_images = $this->gallery_image($id);
+        //     $Hotel_detail_image = Hotel_detail_image::where('hotel_id', $id)->orderBy('created_at', 'desc')->first();
+
+        //     Session::forget('search_params');
+        //     return view('/frontend/hotel-page')
+        //             ->with('hotels', $hotels)
+        //             ->with('price_type', $price_type)
+        //             ->with('rooms', $rooms)
+        //             ->with('search_data', $search_data)
+        //             ->with('hoteldetails', $hoteldetails)
+        //             ->with('Hotel_detail_image', $Hotel_detail_image)
+        //             ->with('total_persons', $total_persons)
+        //             ->with('booking_text_regular_prices', $booking_text_regular_prices)
+        //             ->with('HotelID', $id)
+        //             ->with('roomId', $room_id)
+        //             ->with('gallery_images', $gallery_images);
+        // }
     }
+    
 
     public function hotel_search(Request $request)
     {
@@ -173,8 +219,22 @@ class HotelpageController extends Controller
         $params = $request->all();
         // dd($params);
         $hotel = $hotel[0];
-        Session::put('search_params', $params);
+        Session::put('search_params', $params);        
         return redirect()->route('hotel-page', $hotel->url_key);
+    }
+
+    public function hotel_search_autocomplete(Request $request)
+    {
+        $hotel = Hotel::where('hotel_name',$request->hotel_name)->where('status',1)->get();        
+        // dd($params);
+        $hotel = $hotel[0];      
+        return redirect()->route('hotel-page', $hotel->url_key);
+    }
+
+     
+    public function autocomplete(Request $request){
+        $data = Hotel::select('hotel_name')->where('hotel_name',"LIKE","{$request->term}%")->where('status',1)->orderBy('hotel_name','asc')->get();
+        return response()->json($data);
     }
 
     public function user_currency(Request $request)
@@ -274,7 +334,7 @@ class HotelpageController extends Controller
 
     private function findRoom($id, $room_id, $erwachsene, $kinder)
     {
-        if ($erwachsene === 0) {
+        if ($erwachsene == 0) {
             return false;
         }
         $query = Room::select('rooms.*')
